@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Magic Sight Words</title>
+    <style>
+        /* Light Theme & Kid-Friendly Fonts */
+        :root {
+            --bg-color: #F0F8FF; /* Alice Blue */
+            --text-color: #333333;
+            --box-bg: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka One', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: #FF595E;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            font-size: 1.5rem;
+            color: #1982C4;
+            margin-bottom: 30px;
+        }
+
+        /* Big Search Box */
+        .search-container {
+            margin-bottom: 40px;
+        }
+
+        #searchBox {
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+            font-size: 2rem;
+            font-family: inherit;
+            border: 4px solid #8AC926;
+            border-radius: 50px;
+            outline: none;
+            box-shadow: 0px 8px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        #searchBox:focus {
+            border-color: #FF924C;
+            transform: scale(1.02);
+        }
+
+        /* Word Sets Layout */
+        .set-section {
+            background-color: var(--box-bg);
+            border-radius: 30px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1000px;
+            box-shadow: 0px 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .set-title {
+            font-size: 2.5rem;
+            color: #6A4C93;
+            border-bottom: 3px dashed #FFCA3A;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Colorful Word Buttons */
+        .word-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .word-card {
+            display: inline-block;
+            text-decoration: none;
+            font-size: 2.5rem; /* Big font for kids */
+            font-weight: bold;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            box-shadow: 0px 5px 0px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        /* Hover and Click effects */
+        .word-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0px 10px 0px rgba(0,0,0,0.2);
+        }
+
+        .word-card:active {
+            transform: translateY(2px);
+            box-shadow: 0px 2px 0px rgba(0,0,0,0.2);
+        }
+
+        /* Colors assigned dynamically in JavaScript */
+        .color-0 { background-color: #FF595E; } /* Red */
+        .color-1 { background-color: #FFCA3A; color: #333; } /* Yellow */
+        .color-2 { background-color: #8AC926; } /* Green */
+        .color-3 { background-color: #1982C4; } /* Blue */
+        .color-4 { background-color: #6A4C93; } /* Purple */
+        .color-5 { background-color: #FF924C; } /* Orange */
+
+        /* Hidden class for search filtering */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌟 My Magic Sight Words 🌟</h1>
+    <p class="subtitle">Search for a word or click a bubble to learn!</p>
+
+    <div class="search-container">
+        <input type="text" id="searchBox" placeholder="🔍 Find a word..." autocomplete="off">
+    </div>
+
+    <div id="wordsContainer">
+        <!-- Words will be automatically generated here by JavaScript -->
+    </div>
+
+    <script>
+        // The 100 Sight Words broken into sets
+        const sightWords = {
+            "Set 1: The Absolute Basics": ["the", "of", "and", "a", "to", "in", "is", "you", "that", "it", "he", "was", "for", "on", "are", "as", "with", "his", "they", "I", "at", "be", "this", "have", "from"],
+            "Set 2: High-Frequency Builders": ["or", "one", "had", "by", "words", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use", "an", "each", "which", "she", "do", "how", "their", "if"],
+            "Set 3: Sentence Expanders": ["will", "up", "other", "about", "out", "many", "then", "them", "these", "so", "some", "her", "would", "make", "like", "him", "into", "time", "has", "look", "two", "more", "write", "go", "see"],
+            "Set 4: Advancing Vocabulary": ["number", "no", "way", "could", "people", "my", "than", "first", "water", "been", "called", "who", "am", "its", "now", "find", "long", "down", "day", "did", "get", "come", "made", "may", "part"]
+        };
+
+        const container = document.getElementById('wordsContainer');
+        let colorIndex = 0;
+
+        // Generate HTML for each set and word
+        for (const [setName, words] of Object.entries(sightWords)) {
+            
+            // Create Set Container
+            const section = document.createElement('div');
+            section.className = 'set-section';
+            
+            // Create Set Title
+            const title = document.createElement('h2');
+            title.className = 'set-title';
+            title.textContent = setName;
+            section.appendChild(title);
+
+            // Create Grid for Words
+            const grid = document.createElement('div');
+            grid.className = 'word-grid';
+
+            // Create a colorful button for each word
+            words.forEach(word => {
+                const wordLink = document.createElement('a');
+                wordLink.href = `${word}.html`; // Links to exactly the word (e.g., the.html)
+                wordLink.className = `word-card color-${colorIndex % 6}`; // Cycle through 6 colors
+                wordLink.textContent = word;
+                
+                // Add the word to the grid
+                grid.appendChild(wordLink);
+                colorIndex++;
+            });
+
+            section.appendChild(grid);
+            container.appendChild(section);
+        }
+
+        // Automatic Search Functionality
+        const searchBox = document.getElementById('searchBox');
+        
+        searchBox.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const sections = document.querySelectorAll('.set-section');
+
+            sections.forEach(section => {
+                let hasVisibleWords = false;
+                const words = section.querySelectorAll('.word-card');
+
+                words.forEach(word => {
+                    const text = word.textContent.toLowerCase();
+                    // If the typed text is found in the word, show it. Otherwise, hide it.
+                    if (text.includes(searchTerm)) {
+                        word.classList.remove('hidden');
+                        hasVisibleWords = true;
+                    } else {
+                        word.classList.add('hidden');
+                    }
+                });
+
+                // Hide the whole category box if no words inside it match the search
+                if (hasVisibleWords) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
