@@ -108,7 +108,7 @@
             box-shadow: 0px 2px 0px rgba(0,0,0,0.2);
         }
 
-        /* Colors assigned dynamically in JavaScript */
+        /* Colors */
         .color-0 { background-color: #FF595E; } /* Red */
         .color-1 { background-color: #FFCA3A; color: #333; } /* Yellow */
         .color-2 { background-color: #8AC926; } /* Green */
@@ -116,10 +116,7 @@
         .color-4 { background-color: #6A4C93; } /* Purple */
         .color-5 { background-color: #FF924C; } /* Orange */
 
-        /* Hidden class for search filtering */
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -131,14 +128,10 @@
         <input type="text" id="searchBox" placeholder="🔍 Find a word..." autocomplete="off">
     </div>
 
-    <div id="wordsContainer">
-        <!-- Words will be automatically generated here by JavaScript -->
-    </div>
+    <!-- THIS IS WHERE THE WORDS WILL LOAD -->
+    <div id="wordsContainer"></div>
 
     <script>
-        
-
-        // The 100 Sight Words broken into sets
         const sightWords = {
             "Set 1: The Absolute Basics": ["the", "of", "and", "a", "to", "in", "is", "you", "that", "it", "he", "was", "for", "on", "are", "as", "with", "his", "they", "I", "at", "be", "this", "have", "from"],
             "Set 2: High-Frequency Builders": ["or", "one", "had", "by", "words", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use", "an", "each", "which", "she", "do", "how", "their", "if"],
@@ -146,14 +139,8 @@
             "Set 4: Advancing Vocabulary": ["number", "no", "way", "could", "people", "my", "than", "first", "water", "been", "called", "who", "am", "its", "now", "find", "long", "down", "day", "did", "get", "come", "made", "may", "part"]
         };
 
-        const container = document.getElementById('wordsContainer');
-        let colorIndex = 0;
-
-        // Generate HTML for each set and word
-       
-        // Automatic Search Functionality
+        // 1. Automatic Search Functionality
         const searchBox = document.getElementById('searchBox');
-        
         searchBox.addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
             const sections = document.querySelectorAll('.set-section');
@@ -164,7 +151,6 @@
 
                 words.forEach(word => {
                     const text = word.textContent.toLowerCase();
-                    // If the typed text is found in the word, show it. Otherwise, hide it.
                     if (text.includes(searchTerm)) {
                         word.classList.remove('hidden');
                         hasVisibleWords = true;
@@ -173,7 +159,6 @@
                     }
                 });
 
-                // Hide the whole category box if no words inside it match the search
                 if (hasVisibleWords) {
                     section.classList.remove('hidden');
                 } else {
@@ -182,78 +167,87 @@
             });
         });
 
-        // Add a loading message to your HTML right above the wordsContainer (optional but recommended)
-// <div id="loading-message" style="font-size: 1.5rem; color: #1982C4;">✨ Looking for magic words... ✨</div>
-
-async function loadAvailableSightWords() {
-    const container = document.getElementById('wordsContainer');
-    // Finds the loading message if you added it, otherwise creates a dummy object to prevent errors
-    const loading = document.getElementById('loading-message') || { style: {}, innerText: '' };
-
-    try {
-        // Fetch the list of files directly from your GitHub Repository (Make sure the repo name is correct)
-        const response = await fetch('https://api.github.com/repos/yekoshy/sightwords/contents');
-        const filesData = await response.json();
-        
-        // If the API limit is hit or repo not found, filesData won't be an array
-        if (!Array.isArray(filesData)) throw new Error("API rate limit or connection issue.");
-
-        // Create an array containing only the names of the files in your repo
-        const availableFiles = filesData.map(file => file.name);
-
-        // Hide the loading text
-        loading.style.display = 'none';
-
-        let colorIndex = 0;
-
-        // Loop through the sightWords sets
-        for (const [setName, words] of Object.entries(sightWords)) {
+        // 2. The Smart Fetch Function
+        async function loadAvailableSightWords() {
+            const container = document.getElementById('wordsContainer');
             
-            // THE MAGIC RULE: Only add the word if "word.html" exists in the GitHub folder
-            const availableWords = words.filter(word => availableFiles.includes(`${word}.html`));
+            // Show a nice loading message directly inside the container so it doesn't stay blank
+            container.innerHTML = '<p style="font-size: 1.5rem; color: #1982C4; margin-top:40px;">✨ Checking for magic words... ✨</p>';
 
-            // Only create the visual box if there is at least ONE word ready in this set
-            if (availableWords.length > 0) {
+            try {
+                let colorIndex = 0;
+                let anyWordFound = false;
                 
-                const section = document.createElement('div');
-                section.className = 'set-section';
+                // Get all 100 words in one list
+                const allWords = Object.values(sightWords).flat();
                 
-                const title = document.createElement('h2');
-                title.className = 'set-title';
-                title.textContent = setName;
-                section.appendChild(title);
-
-                const grid = document.createElement('div');
-                grid.className = 'word-grid';
-
-                availableWords.forEach(word => {
-                    const wordLink = document.createElement('a');
-                    wordLink.href = `${word}.html`; 
-                    wordLink.className = `word-card color-${colorIndex % 6}`; 
-                    wordLink.textContent = word;
-                    
-                    grid.appendChild(wordLink);
-                    colorIndex++;
+                // Very quickly check if the HTML file exists for each word
+                const checkPromises = allWords.map(async (word) => {
+                    try {
+                        const response = await fetch(`${word}.html`, { method: 'HEAD' });
+                        return response.ok ? word : null; // If it's a 200 OK, save it!
+                    } catch {
+                        return null;
+                    }
                 });
 
-                section.appendChild(grid);
-                container.appendChild(section);
+                // Wait for all the checks to complete
+                const results = await Promise.all(checkPromises);
+                
+                // Filter out the empty ones, keeping only the words we've built pages for
+                const availableFiles = results.filter(word => word !== null);
+
+                // Clear out the loading text
+                container.innerHTML = '';
+
+                // Build the colorful buttons!
+                for (const [setName, words] of Object.entries(sightWords)) {
+                    
+                    // Cross-check: is this word in our found list?
+                    const availableWords = words.filter(word => availableFiles.includes(word));
+
+                    if (availableWords.length > 0) {
+                        anyWordFound = true;
+                        
+                        const section = document.createElement('div');
+                        section.className = 'set-section';
+                        
+                        const title = document.createElement('h2');
+                        title.className = 'set-title';
+                        title.textContent = setName;
+                        section.appendChild(title);
+
+                        const grid = document.createElement('div');
+                        grid.className = 'word-grid';
+
+                        availableWords.forEach(word => {
+                            const wordLink = document.createElement('a');
+                            wordLink.href = `${word}.html`; 
+                            wordLink.className = `word-card color-${colorIndex % 6}`; 
+                            wordLink.textContent = word;
+                            
+                            grid.appendChild(wordLink);
+                            colorIndex++;
+                        });
+
+                        section.appendChild(grid);
+                        container.appendChild(section);
+                    }
+                }
+
+                // If nothing was found at all...
+                if (!anyWordFound) {
+                    container.innerHTML = '<p style="text-align:center; font-size: 1.5rem; color: #64748b; margin-top:40px;">No magic words found yet. Let\'s create some soon! ✨</p>';
+                }
+
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = '<p style="color: #FF595E; font-size: 1.5rem; font-weight: bold;">Oops! Had trouble checking the words.</p>';
             }
         }
 
-        // If no words have HTML files yet
-        if (container.innerHTML.trim() === '') {
-            container.innerHTML = '<p style="text-align:center; font-size: 1.5rem; color: #64748b;">No magic words found yet. Let\'s create some soon! ✨</p>';
-        }
-
-    } catch (error) {
-        console.error('Error fetching files:', error);
-        loading.innerText = 'Oops! Had trouble finding the words. Please refresh the page.';
-    }
-}
-
-// Run the function when the page loads
-loadAvailableSightWords();
+        // Start checking the moment the page loads!
+        loadAvailableSightWords();
     </script>
 </body>
 </html>
