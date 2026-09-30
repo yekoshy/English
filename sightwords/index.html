@@ -136,6 +136,10 @@
     </div>
 
     <script>
+        // 🛑 ONLY THESE WORDS WILL SHOW ON THE PAGE
+        // As you create new files (like and.html, of.html), just add them to this list!
+        const createdPages = ["the"];
+
         // The 100 Sight Words broken into sets
         const sightWords = {
             "Set 1: The Absolute Basics": ["the", "of", "and", "a", "to", "in", "is", "you", "that", "it", "he", "was", "for", "on", "are", "as", "with", "his", "they", "I", "at", "be", "this", "have", "from"],
@@ -150,34 +154,40 @@
         // Generate HTML for each set and word
         for (const [setName, words] of Object.entries(sightWords)) {
             
-            // Create Set Container
-            const section = document.createElement('div');
-            section.className = 'set-section';
-            
-            // Create Set Title
-            const title = document.createElement('h2');
-            title.className = 'set-title';
-            title.textContent = setName;
-            section.appendChild(title);
+            // Filter the list to ONLY include words you have actually built pages for
+            const availableWords = words.filter(word => createdPages.includes(word));
 
-            // Create Grid for Words
-            const grid = document.createElement('div');
-            grid.className = 'word-grid';
-
-            // Create a colorful button for each word
-            words.forEach(word => {
-                const wordLink = document.createElement('a');
-                wordLink.href = `${word}.html`; // Links to exactly the word (e.g., the.html)
-                wordLink.className = `word-card color-${colorIndex % 6}`; // Cycle through 6 colors
-                wordLink.textContent = word;
+            // Only create the visual box if there is at least ONE word ready in this set
+            if (availableWords.length > 0) {
                 
-                // Add the word to the grid
-                grid.appendChild(wordLink);
-                colorIndex++;
-            });
+                // Create Set Container
+                const section = document.createElement('div');
+                section.className = 'set-section';
+                
+                // Create Set Title
+                const title = document.createElement('h2');
+                title.className = 'set-title';
+                title.textContent = setName;
+                section.appendChild(title);
 
-            section.appendChild(grid);
-            container.appendChild(section);
+                // Create Grid for Words
+                const grid = document.createElement('div');
+                grid.className = 'word-grid';
+
+                // Create a colorful button for each available word
+                availableWords.forEach(word => {
+                    const wordLink = document.createElement('a');
+                    wordLink.href = `${word}.html`; 
+                    wordLink.className = `word-card color-${colorIndex % 6}`; 
+                    wordLink.textContent = word;
+                    
+                    grid.appendChild(wordLink);
+                    colorIndex++;
+                });
+
+                section.appendChild(grid);
+                container.appendChild(section);
+            }
         }
 
         // Automatic Search Functionality
