@@ -104,6 +104,10 @@
             box-shadow: none;
         }
 
+        /* Reading Syllables Coloring */
+        .syl-a { color: var(--primary); }    /* Red */
+        .syl-b { color: var(--quaternary); } /* Blue */
+
         /* --- Tab 1: Learning --- */
         .slide {
             display: none;
@@ -116,12 +120,11 @@
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         
         .slide-emoji {
-            font-size: 9rem;
+            font-size: 7rem;
             margin: 10px 0;
         }
         .slide-text {
             font-size: 3.5rem;
-            color: var(--quaternary);
             margin: 20px 0;
             font-weight: bold;
         }
@@ -204,7 +207,6 @@
 
         /* --- Tab 3: Train Write Game --- */
         .train-container {
-            overflow: hidden;
             background: #E8F4FA;
             padding: 30px;
             border-radius: 20px;
@@ -213,14 +215,11 @@
             position: relative;
         }
         .train {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 2 levels of 3 cars */
             gap: 15px;
-            width: max-content;
-            animation: moveTrain 8s linear infinite alternate;
-        }
-        @keyframes moveTrain {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(60%); }
+            width: fit-content;
+            margin: 0 auto;
         }
         .train-car {
             background-color: var(--primary);
@@ -233,6 +232,7 @@
             cursor: pointer;
             box-shadow: inset 0 -10px 0 rgba(0,0,0,0.2);
             transition: background-color 0.2s, transform 0.1s;
+            text-align: center;
         }
         .train-car:active {
             transform: scale(0.9);
@@ -279,7 +279,7 @@
             border: 4px solid var(--quaternary);
             border-radius: 15px;
             padding: 20px;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: bold;
             cursor: pointer;
             transition: 0.2s;
@@ -302,6 +302,9 @@
             opacity: 0.8;
             transform: scale(0.95);
             box-shadow: none;
+        }
+        .match-item span {
+            pointer-events: none;
         }
 
         /* Confetti Overlay */
@@ -338,28 +341,66 @@
         <!-- Slide 1 -->
         <div class="slide active">
             <div class="slide-emoji">🔊</div>
-            <div class="slide-text">and</div>
+            <div class="slide-text"><span class="syl-a">and</span></div>
             <button class="big-btn" onclick="speak('and')">Play Sound</button>
         </div>
         <!-- Slide 2 -->
         <div class="slide">
-            <div class="slide-emoji">🐈 🐀</div>
-            <div class="slide-text">cat and rat</div>
+            <div class="slide-emoji">👨 👩</div>
+            <div class="slide-text">
+                <span class="syl-a">I</span> 
+                <span class="syl-b">love</span> 
+                <span class="syl-a">pa</span><span class="syl-b">pa</span> 
+                <span class="syl-a">and</span> 
+                <span class="syl-b">mom</span>
+            </div>
         </div>
         <!-- Slide 3 -->
         <div class="slide">
-            <div class="slide-emoji">☀️ ⭐</div>
-            <div class="slide-text">sun and star</div>
+            <div class="slide-emoji">🍎 🍌</div>
+            <div class="slide-text">
+                <span class="syl-a">I</span> 
+                <span class="syl-b">eat</span> 
+                <span class="syl-a">ap</span><span class="syl-b">ple</span> 
+                <span class="syl-a">and</span> 
+                <span class="syl-b">ba</span><span class="syl-a">na</span><span class="syl-b">na</span>
+            </div>
         </div>
         <!-- Slide 4 -->
         <div class="slide">
-            <div class="slide-emoji">👩 👨</div>
-            <div class="slide-text">mom and dad</div>
+            <div class="slide-emoji">📐 🔬</div>
+            <div class="slide-text">
+                <span class="syl-a">I</span> 
+                <span class="syl-b">stud</span><span class="syl-a">y</span> 
+                <span class="syl-b">math</span> 
+                <span class="syl-a">and</span> 
+                <span class="syl-b">sci</span><span class="syl-a">ence</span>
+            </div>
         </div>
         <!-- Slide 5 -->
         <div class="slide">
-            <div class="slide-emoji">🦇 ⚾</div>
-            <div class="slide-text">bat and ball</div>
+            <div class="slide-emoji">⚽ 🚲</div>
+            <div class="slide-text">
+                <span class="syl-a">I</span> 
+                <span class="syl-b">play</span> 
+                <span class="syl-a">with</span> 
+                <span class="syl-b">ball</span> 
+                <span class="syl-a">and</span> 
+                <span class="syl-b">bike</span>
+            </div>
+        </div>
+        <!-- Slide 6 -->
+        <div class="slide">
+            <div class="slide-emoji">🐕 🐈</div>
+            <div class="slide-text">
+                <span class="syl-a">I</span> 
+                <span class="syl-b">see</span> 
+                <span class="syl-a">a</span> 
+                <span class="syl-b">dog</span> 
+                <span class="syl-a">and</span> 
+                <span class="syl-b">a</span> 
+                <span class="syl-a">cat</span>
+            </div>
         </div>
 
         <div class="slide-controls">
@@ -383,7 +424,7 @@
         <p style="font-size: 2rem; color: var(--primary); font-weight: bold; margin: 10px 0;">Round: <span id="writeRound">1</span> / 5</p>
         <div class="train-container">
             <div class="train" id="trainCars">
-                <!-- Cars generated by JS -->
+                <!-- Cars generated by JS as a static 2-level grid -->
             </div>
         </div>
         <div class="answer-board" id="answerBoard">
@@ -611,7 +652,7 @@
             const train = document.getElementById('trainCars');
             train.innerHTML = "";
             
-            // Add letters ('a', 'n', 'd' + some decoys)
+            // Generate exactly 6 letters so the grid shows 2 levels of 3 cars cleanly
             let letters = ['a', 'n', 'd', 't', 'o', 'e'];
             letters = letters.sort(() => Math.random() - 0.5);
 
@@ -678,10 +719,11 @@
 
         // --- TAB 4: MATCH GAME LOGIC ---
         const pairs = [
-            { text: "cat and rat", img: "🐈 🐀" },
-            { text: "sun and star", img: "☀️ ⭐" },
-            { text: "mom and dad", img: "👩 👨" },
-            { text: "bat and ball", img: "🦇 ⚾" }
+            { text: "I love papa and mom", html: '<span class="syl-a">I</span> <span class="syl-b">love</span> <span class="syl-a">pa</span><span class="syl-b">pa</span> <span class="syl-a">and</span> <span class="syl-b">mom</span>', img: "👨 👩" },
+            { text: "I eat apple and banana", html: '<span class="syl-a">I</span> <span class="syl-b">eat</span> <span class="syl-a">ap</span><span class="syl-b">ple</span> <span class="syl-a">and</span> <span class="syl-b">ba</span><span class="syl-a">na</span><span class="syl-b">na</span>', img: "🍎 🍌" },
+            { text: "I study math and science", html: '<span class="syl-a">I</span> <span class="syl-b">stud</span><span class="syl-a">y</span> <span class="syl-b">math</span> <span class="syl-a">and</span> <span class="syl-b">sci</span><span class="syl-a">ence</span>', img: "📐 🔬" },
+            { text: "I play with ball and bike", html: '<span class="syl-a">I</span> <span class="syl-b">play</span> <span class="syl-a">with</span> <span class="syl-b">ball</span> <span class="syl-a">and</span> <span class="syl-b">bike</span>', img: "⚽ 🚲" },
+            { text: "I see a dog and a cat", html: '<span class="syl-a">I</span> <span class="syl-b">see</span> <span class="syl-a">a</span> <span class="syl-b">dog</span> <span class="syl-a">and</span> <span class="syl-b">a</span> <span class="syl-a">cat</span>', img: "🐕 🐈" }
         ];
         let selectedSentence = null;
         let selectedEmoji = null;
@@ -703,15 +745,15 @@
             sentences.forEach(p => {
                 const div = document.createElement('div');
                 div.className = 'match-item';
-                div.innerText = p.text;
-                div.onclick = () => handleMatchClick('text', p.text, div);
+                div.innerHTML = p.html; // Using the syllable-colored HTML here
+                div.onclick = () => handleMatchClick('text', p.text, div); // Passing the plain text for the match check
                 sCol.appendChild(div);
             });
 
             emojis.forEach(p => {
                 const div = document.createElement('div');
                 div.className = 'match-item';
-                div.style.fontSize = "5rem"; // Make emoji huge
+                div.style.fontSize = "4.5rem"; // Adjusted slightly for cleaner display
                 div.innerText = p.img;
                 div.onclick = () => handleMatchClick('img', p.img, div);
                 eCol.appendChild(div);
