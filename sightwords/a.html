@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn the word "a"</title>
+    <style>
+        /* Light, Colorful Theme & Big Fonts */
+        :root {
+            --bg-color: #F8F9FA;
+            --primary: #FF595E;
+            --secondary: #FFCA3A;
+            --tertiary: #8AC926;
+            --quaternary: #1982C4;
+            --text-color: #333;
+            --white: #FFF;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka One', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 10px;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        /* Sound Toggle Button */
+        .sound-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--tertiary);
+            color: white;
+            border: 4px solid #6BAA1C;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #6BAA1C;
+            transition: all 0.2s;
+            z-index: 1000;
+            font-family: inherit;
+        }
+
+        .sound-toggle:active {
+            transform: translateY(5px);
+            box-shadow: none;
+        }
+
+        .sound-toggle.off {
+            background-color: var(--primary);
+            border-color: #C13D41;
+            box-shadow: 0 5px 0 #C13D41;
+        }
+
+        /* Clickable text for reading aloud */
+        .readable-text {
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            border-radius: 15px;
+            display: inline-block;
+            padding: 5px 15px;
+        }
+
+        .readable-text:hover {
+            background-color: rgba(255, 202, 58, 0.3); /* Fun yellow highlight on hover */
+            transform: scale(1.03);
+        }
+
+        .readable-text:active {
+            transform: scale(0.97);
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 3.5rem;
+            margin-top: 60px; /* Spaced to avoid sound button */
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #DDD;
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background-color: var(--white);
+            border: 4px solid var(--quaternary);
+            border-radius: 20px;
+            padding: 15px 25px;
+            font-size: 1.8rem;
+            font-family: inherit;
+            font-weight: bold;
+            color: var(--quaternary);
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 0 var(--quaternary);
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background-color: var(--quaternary);
+            color: var(--white);
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--quaternary);
+        }
+
+        .tab-content {
+            display: none;
+            background-color: var(--white);
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+        /* Shared Button Styles */
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .big-btn {
+            background-color: var(--tertiary);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 15px 35px;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px;
+            box-shadow: 0 6px 0 #6BAA1C;
+            transition: transform 0.1s;
+        }
+
+        .big-btn:active {
+            transform: translateY(6px);
+            box-shadow: none;
+        }
+
+        /* Reading Syllables Coloring */
+        .syl-a { color: var(--primary); }    /* Red */
+        .syl-b { color: var(--quaternary); } /* Blue */
+
+        /* --- Tab 1: Learning --- */
+        .slide {
+            display: none;
+            padding: 20px;
+        }
+        .slide.active {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .slide-emoji {
+            font-size: 7rem;
+            margin: 10px 0;
+        }
+        .slide-text {
+            font-size: 3.5rem;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .slide-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .dots {
+            display: flex;
+            gap: 12px;
+        }
+        .dot {
+            width: 24px;
+            height: 24px;
+            background-color: #E0E0E0;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        .dot.active {
+            background-color: var(--primary);
+            transform: scale(1.2);
+        }
+
+        /* --- Tab 2: Search Game --- */
+        #timer {
+            font-size: 2.5rem;
+            color: var(--primary);
+            font-weight: bold;
+            background: #FFE8E8;
+            border-radius: 15px;
+            display: inline-block;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+        }
+        .word-grid {
+            display: grid;
+            gap: 15px;
+            margin: 25px auto;
+            max-width: 700px;
+        }
+        .search-word {
+            background-color: var(--secondary);
+            border: 4px solid #E5B532;
+            border-radius: 20px;
+            font-size: 2.5rem;
+            padding: 20px 10px;
+            font-weight: bold;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .search-word:hover {
+            transform: scale(1.05);
+        }
+        .search-word.found {
+            background-color: var(--tertiary);
+            color: white;
+            border-color: #6BAA1C;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        .search-word.wrong {
+            background-color: var(--primary);
+            color: white;
+            border-color: #C13D41;
+            animation: shake 0.3s;
+        }
+        .hint {
+            background-color: #8AC926 !important;
+            color: white !important;
+            border: 5px solid #1982C4 !important;
+            animation: pulseHint 0.8s infinite;
+            z-index: 10;
+        }
+        @keyframes pulseHint { 0% { transform: scale(1); } 50% { transform: scale(1.15); box-shadow: 0 0 15px var(--quaternary); } 100% { transform: scale(1); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-15px); } 75% { transform: translateX(15px); } }
+
+        /* --- Tab 3: Train Write Game --- */
+        .train-container {
+            background: #E8F4FA;
+            padding: 30px;
+            border-radius: 20px;
+            border-bottom: 8px solid #A9D6E5;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .train {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        .train-car {
+            background-color: var(--primary);
+            color: white;
+            font-size: 4rem;
+            font-weight: bold;
+            padding: 20px 40px;
+            border-radius: 15px 15px 0 0;
+            border: 5px solid #C13D41;
+            cursor: pointer;
+            box-shadow: inset 0 -10px 0 rgba(0,0,0,0.2);
+            transition: background-color 0.2s, transform 0.1s;
+            text-align: center;
+        }
+        .train-car:active {
+            transform: scale(0.9);
+        }
+        .train-car.correct-hint {
+            background-color: var(--tertiary) !important;
+            border-color: #6BAA1C !important;
+            animation: pulseHint 0.8s infinite;
+        }
+        .answer-board {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .answer-slot {
+            width: 80px;
+            height: 90px;
+            border: 5px dashed var(--quaternary);
+            border-radius: 15px;
+            font-size: 4rem;
+            line-height: 90px;
+            font-weight: bold;
+            color: var(--quaternary);
+            background-color: #FAFAFA;
+        }
+
+        /* --- Tab 4: Match Game --- */
+        .match-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .match-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 45%;
+        }
+        .match-item {
+            background-color: #FFF;
+            border: 4px solid var(--quaternary);
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 2.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .match-item:hover {
+            background-color: #E8F4FA;
+        }
+        .match-item.selected {
+            background-color: var(--secondary);
+            border-color: #E5B532;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .match-item.matched {
+            background-color: var(--tertiary);
+            color: white;
+            border-color: #6BAA1C;
+            pointer-events: none;
+            opacity: 0.8;
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+        .match-item span {
+            pointer-events: none;
+        }
+
+        /* Confetti Overlay */
+        #confetti {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 20px; height: 20px;
+            animation: fall linear forwards;
+            border-radius: 3px;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toggle Sound Button -->
+    <button id="soundToggleBtn" class="sound-toggle" onclick="toggleSound()">🔊 Sound: ON</button>
+
+    <!-- Headings can now be clicked by the kid to read them aloud -->
+    <h1 class="readable-text" onclick="speak('Learning a')">✨ Learning "a" ✨</h1>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('learningTab', this)">📖 Read</button>
+        <button class="tab-btn" onclick="openTab('searchTab', this)">🔍 Find</button>
+        <button class="tab-btn" onclick="openTab('writeTab', this)">🚂 Write</button>
+        <button class="tab-btn" onclick="openTab('matchTab', this)">🧩 Match</button>
+    </div>
+
+    <!-- TAB 1: LEARNING -->
+    <div id="learningTab" class="tab-content active">
+        <!-- Slide 1 -->
+        <div class="slide active">
+            <div class="slide-emoji">🔊</div>
+            <div class="slide-text readable-text" onclick="speak(this.innerText)"><span class="syl-a">a</span></div>
+            <br>
+            <button class="big-btn" onclick="speak('a')">Play Sound</button>
+        </div>
+        <!-- Slide 2 -->
+        <div class="slide">
+            <div class="slide-emoji">🌉 👀</div>
+            <div class="slide-text readable-text" onclick="speak(this.innerText)">
+                <span class="syl-a">I</span> 
+                <span class="syl-b">see</span> 
+                <span class="syl-a">a</span> 
+                <span class="syl-b">bridge</span>
+            </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="slide">
+            <div class="slide-emoji">❤️ 👶</div>
+            <div class="slide-text readable-text" onclick="speak(this.innerText)">
+                <span class="syl-a">I</span> 
+                <span class="syl-b">love</span> 
+                <span class="syl-a">a</span> 
+                <span class="syl-b">ba</span><span class="syl-a">by</span>
+            </div>
+        </div>
+        <!-- Slide 4 -->
+        <div class="slide">
+            <div class="slide-emoji">🧸</div>
+            <div class="slide-text readable-text" onclick="speak(this.innerText)">
+                <span class="syl-a">It</span> 
+                <span class="syl-b">is</span> 
+                <span class="syl-a">a</span> 
+                <span class="syl-b">doll</span>
+            </div>
+        </div>
+        <!-- Slide 5 -->
+        <div class="slide">
+            <div class="slide-emoji">🍎</div>
+            <div class="slide-text readable-text" onclick="speak(this.innerText)">
+                <span class="syl-a">There</span> 
+                <span class="syl-b">is</span> 
+                <span class="syl-a">an</span> 
+                <span class="syl-b">ap</span><span class="syl-a">ple</span>
+            </div>
+        </div>
+        <!-- Slide 6 -->
+        <div class="slide">
+            <div class="slide-emoji">🍊 🍊</div>
+            <div class="slide-text readable-text" onclick="speak(this.innerText)">
+                <span class="syl-a">This</span> 
+                <span class="syl-b">is</span> 
+                <span class="syl-a">an</span> 
+                <span class="syl-b">or</span><span class="syl-a">ang</span><span class="syl-b">es</span>
+            </div>
+        </div>
+
+        <div class="slide-controls">
+            <button class="big-btn" onclick="changeSlide(-1)">⬅️ Back</button>
+            <div class="dots" id="slideDots"></div>
+            <button class="big-btn" onclick="changeSlide(1)">Next ➡️</button>
+        </div>
+    </div>
+
+    <!-- TAB 2: SEARCH GAME -->
+    <div id="searchTab" class="tab-content">
+        <h2 class="readable-text" onclick="speak(this.innerText)" style="color: var(--quaternary); font-size: 2.8rem; margin-top: 0;">Find "a" 5 times!</h2>
+        <div id="timer">Level <span id="levelNum">1</span> ⏱️ Time: <span id="timeText">60</span>s</div>
+        <div class="word-grid" id="searchGrid"></div>
+        <div id="searchFeedback" class="readable-text" onclick="speak(this.innerText)" style="font-size: 2.5rem; margin-top: 15px; font-weight: bold; color: var(--primary);"></div>
+    </div>
+
+    <!-- TAB 3: WRITE THE WORD TRAIN -->
+    <div id="writeTab" class="tab-content">
+        <h2 class="readable-text" onclick="speak(this.innerText)" style="color: var(--quaternary); font-size: 2.8rem; margin-top: 0;">Catch the letters for "a"!</h2>
+        <p style="font-size: 2rem; color: var(--primary); font-weight: bold; margin: 10px 0;">Round: <span id="writeRound">1</span> / 5</p>
+        <div class="train-container">
+            <div class="train" id="trainCars">
+                <!-- Cars generated by JS -->
+            </div>
+        </div>
+        <div class="answer-board" id="answerBoard">
+            <!-- Slots generated by JS -->
+        </div>
+        <div id="writeFeedback" class="readable-text" onclick="speak(this.innerText)" style="font-size: 2.2rem; margin-top: 25px; font-weight:bold;"></div>
+    </div>
+
+    <!-- TAB 4: MATCHING GAME -->
+    <div id="matchTab" class="tab-content">
+        <h2 class="readable-text" onclick="speak(this.innerText)" style="color: var(--quaternary); font-size: 2.8rem; margin-top: 0;">Match the sentence to the picture!</h2>
+        <div class="match-container">
+            <div class="match-column" id="sentencesCol"></div>
+            <div class="match-column" id="emojisCol"></div>
+        </div>
+    </div>
+
+    <!-- Confetti Container -->
+    <div id="confetti"></div>
+
+    <script>
+        // --- GLOBAL FUNCTIONS & SOUND TOGGLE ---
+        let soundEnabled = true;
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundToggleBtn');
+            if (soundEnabled) {
+                btn.innerHTML = "🔊 Sound: ON";
+                btn.classList.remove('off');
+                speak("Sound on"); 
+            } else {
+                window.speechSynthesis.cancel(); // Stop anything playing immediately
+                btn.innerHTML = "🔇 Sound: OFF";
+                btn.classList.add('off');
+            }
+        }
+
+        // Helper function for perfectly robust random shuffling
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+        
+        // Prepare a variable to hold our chosen voice
+        let kidFriendlyVoice = null;
+
+        // Function to find a clear, feminine voice
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            kidFriendlyVoice = voices.find(voice => 
+                voice.name.includes('Google US English') || 
+                voice.name.includes('Samantha') ||          
+                voice.name.includes('Zira') ||              
+                (voice.lang.includes('en') && voice.name.includes('Female'))
+            );
+            
+            if (!kidFriendlyVoice) {
+                kidFriendlyVoice = voices.find(voice => voice.lang.startsWith('en'));
+            }
+        }
+
+        if ('speechSynthesis' in window) {
+            loadVoices();
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        function speak(text) {
+            if (!soundEnabled) return; // Exit if the sound toggle is turned off
+            
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const msg = new SpeechSynthesisUtterance(text);
+                
+                if (kidFriendlyVoice) {
+                    msg.voice = kidFriendlyVoice;
+                }
+                
+                // Adjust settings for a 4-year-old
+                msg.rate = 0.80;  // Adjusted per instructions
+                msg.pitch = 1.15; // Slightly higher pitch
+                msg.volume = 1.0; // Enforce MAXIMUM volume
+                
+                window.speechSynthesis.speak(msg);
+            }
+        }
+
+        function triggerConfetti() {
+            const container = document.getElementById('confetti');
+            const colors = ['#FF595E', '#FFCA3A', '#8AC926', '#1982C4', '#6A4C93'];
+            for(let i = 0; i < 50; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.left = Math.random() * 100 + 'vw';
+                piece.style.top = '-20px';
+                piece.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+                
+                if (Math.random() > 0.5) {
+                    piece.style.borderRadius = "50%";
+                }
+                
+                container.appendChild(piece);
+                setTimeout(() => piece.remove(), 3000);
+            }
+        }
+
+        function openTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+
+            if(tabId === 'learningTab') readCurrentSlide();
+            if(tabId === 'searchTab') initSearchGame(1);
+            if(tabId === 'writeTab') initWriteGame();
+            if(tabId === 'matchTab') initMatchGame();
+        }
+
+        // --- TAB 1: LEARNING LOGIC ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dotsContainer = document.getElementById('slideDots');
+
+        slides.forEach((s, i) => {
+            const dot = document.createElement('div');
+            dot.className = i === 0 ? 'dot active' : 'dot';
+            dotsContainer.appendChild(dot);
+        });
+        const dots = document.querySelectorAll('.dot');
+
+        function changeSlide(dir) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            
+            currentSlide += dir;
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+            if (currentSlide >= slides.length) currentSlide = 0;
+
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+            readCurrentSlide();
+        }
+
+        function readCurrentSlide() {
+            if(currentSlide === 0) {
+                speak("a");
+            } else {
+                const text = slides[currentSlide].querySelector('.slide-text').innerText;
+                speak(text);
+            }
+        }
+
+        window.onload = () => {
+            setTimeout(() => { if(document.getElementById('learningTab').classList.contains('active')) readCurrentSlide(); }, 500);
+        };
+
+
+        // --- TAB 2: SEARCH GAME LOGIC ---
+        let searchLevel = 1;
+        let searchTimer;
+        let timeLeft = 60;
+        let foundCount = 0;
+        const decoys = ["see", "bridge", "love", "baby", "doll", "apple", "oranges", "There", "This", "is"];
+
+        function initSearchGame(level) {
+            clearInterval(searchTimer);
+            searchLevel = level;
+            timeLeft = 60;
+            foundCount = 0;
+            document.getElementById('levelNum').innerText = level;
+            document.getElementById('timeText').innerText = timeLeft;
+            document.getElementById('searchFeedback').innerText = "";
+
+            const grid = document.getElementById('searchGrid');
+            grid.innerHTML = "";
+
+            let totalWords = level === 1 ? 9 : (level === 2 ? 16 : 25);
+            grid.style.gridTemplateColumns = `repeat(${Math.sqrt(totalWords)}, 1fr)`;
+
+            let words = ["a", "a", "a", "a", "a"];
+            while(words.length < totalWords) {
+                words.push(decoys[Math.floor(Math.random() * decoys.length)]);
+            }
+            words = shuffleArray(words);
+
+            words.forEach(word => {
+                const btn = document.createElement('button');
+                btn.className = 'search-word';
+                btn.innerText = word;
+                btn.onclick = () => handleSearchClick(btn, word);
+                grid.appendChild(btn);
+            });
+
+            searchTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timeText').innerText = timeLeft;
+                if(timeLeft <= 0) {
+                    clearInterval(searchTimer);
+                    speak("Time is up! Let's try again.");
+                    document.getElementById('searchFeedback').innerText = "Time's up! Let's try again! ⏳";
+                    setTimeout(() => initSearchGame(searchLevel), 3000);
+                }
+            }, 1000);
+            
+            speak(`Level ${level}. Find the word 'a' five times!`);
+        }
+
+        function handleSearchClick(btn, word) {
+            if (word === "a") {
+                if (btn.classList.contains('found')) return;
+                
+                btn.classList.add('found');
+                speak("a");
+                foundCount++;
+                triggerConfetti();
+                
+                if (foundCount === 5) {
+                    clearInterval(searchTimer);
+                    document.getElementById('searchFeedback').style.color = "var(--tertiary)";
+                    document.getElementById('searchFeedback').innerText = "Great Job! 🎉";
+                    speak("Great Job!");
+                    
+                    if (searchLevel < 3) {
+                        setTimeout(() => initSearchGame(searchLevel + 1), 2500);
+                    } else {
+                        document.getElementById('searchFeedback').innerText = "You beat all levels! You are a champion! 🏆";
+                        speak("You beat all levels! You are a champion!");
+                    }
+                }
+            } else {
+                btn.classList.add('wrong');
+                speak("Oops! Look for a.");
+                document.getElementById('searchFeedback').style.color = "var(--primary)";
+                document.getElementById('searchFeedback').innerText = "Oops! Look for 'a'!";
+                
+                setTimeout(() => {
+                    btn.classList.remove('wrong');
+                    document.getElementById('searchFeedback').innerText = "";
+                }, 1500);
+
+                document.querySelectorAll('.search-word').forEach(wBtn => {
+                    if (wBtn.innerText === "a" && !wBtn.classList.contains('found')) {
+                        wBtn.classList.add('hint');
+                        setTimeout(() => wBtn.classList.remove('hint'), 1500);
+                    }
+                });
+            }
+        }
+
+        // --- TAB 3: WRITE GAME LOGIC ---
+        let currentWriteIndex = 0;
+        let writeRounds = 1;
+        const targetWord = ['a']; // Dynamically handles exact word length
+        
+        function initWriteGame() {
+            currentWriteIndex = 0;
+            document.getElementById('writeRound').innerText = writeRounds;
+            document.getElementById('writeFeedback').innerText = "";
+            document.getElementById('writeFeedback').style.color = "var(--quaternary)";
+            
+            // Dynamically generate slots based on the target word length
+            const board = document.getElementById('answerBoard');
+            board.innerHTML = "";
+            for(let i = 0; i < targetWord.length; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'answer-slot';
+                slot.id = 'slot' + i;
+                board.appendChild(slot);
+            }
+
+            const train = document.getElementById('trainCars');
+            train.innerHTML = "";
+            
+            // Available decoys excluding the target letters for clarity
+            let availableDecoys = "bcdefghijklmnopqrstuvwxyz".split("");
+            availableDecoys = shuffleArray(availableDecoys);
+            
+            // Add correct letters and 5 random decoys
+            let letters = [...targetWord];
+            for(let i = 0; i < 5; i++) {
+                letters.push(availableDecoys[i]);
+            }
+            letters = shuffleArray(letters);
+
+            letters.forEach(letter => {
+                const car = document.createElement('div');
+                car.className = 'train-car';
+                car.innerText = letter;
+                car.onclick = () => handleTrainClick(letter, car);
+                train.appendChild(car);
+            });
+            
+            speak("Catch the letters to spell 'a'!");
+        }
+
+        function handleTrainClick(letter, carElement) {
+            if (currentWriteIndex >= targetWord.length) return;
+
+            if (letter === targetWord[currentWriteIndex]) {
+                const slot = document.getElementById('slot' + currentWriteIndex);
+                slot.innerText = letter;
+                slot.style.backgroundColor = "#E8F4FA";
+                slot.style.borderColor = "var(--tertiary)";
+                speak(letter);
+                currentWriteIndex++;
+
+                if (currentWriteIndex === targetWord.length) {
+                    speak("a! You did it!");
+                    triggerConfetti();
+                    document.getElementById('writeFeedback').style.color = "var(--tertiary)";
+                    document.getElementById('writeFeedback').innerText = "Perfect! 🎉";
+                    writeRounds++;
+                    
+                    if (writeRounds <= 5) {
+                        setTimeout(initWriteGame, 3000);
+                    } else {
+                        document.getElementById('writeFeedback').innerText = "You wrote it 5 times! You win! 🏆";
+                        speak("You wrote it five times! You win!");
+                        writeRounds = 1;
+                    }
+                }
+            } else {
+                const neededLetter = targetWord[currentWriteIndex];
+                speak(`Try again! We need the letter ${neededLetter}`);
+                document.getElementById('writeFeedback').style.color = "var(--primary)";
+                document.getElementById('writeFeedback').innerText = `Oops! We need "${neededLetter}" next!`;
+                
+                carElement.style.backgroundColor = "#555";
+                
+                document.querySelectorAll('.train-car').forEach(c => {
+                    if (c.innerText === neededLetter) {
+                        c.classList.add('correct-hint');
+                        setTimeout(() => c.classList.remove('correct-hint'), 1500);
+                    }
+                });
+
+                setTimeout(() => {
+                    carElement.style.backgroundColor = "var(--primary)";
+                    document.getElementById('writeFeedback').innerText = "";
+                }, 1500);
+            }
+        }
+
+        // --- TAB 4: MATCH GAME LOGIC ---
+        const pairs = [
+            { text: "I see a bridge", html: '<span class="syl-a">I</span> <span class="syl-b">see</span> <span class="syl-a">a</span> <span class="syl-b">bridge</span>', img: "🌉 👀" },
+            { text: "I love a baby", html: '<span class="syl-a">I</span> <span class="syl-b">love</span> <span class="syl-a">a</span> <span class="syl-b">ba</span><span class="syl-a">by</span>', img: "❤️ 👶" },
+            { text: "It is a doll", html: '<span class="syl-a">It</span> <span class="syl-b">is</span> <span class="syl-a">a</span> <span class="syl-b">doll</span>', img: "🧸" },
+            { text: "There is an apple", html: '<span class="syl-a">There</span> <span class="syl-b">is</span> <span class="syl-a">an</span> <span class="syl-b">ap</span><span class="syl-a">ple</span>', img: "🍎" },
+            { text: "This is an oranges", html: '<span class="syl-a">This</span> <span class="syl-b">is</span> <span class="syl-a">an</span> <span class="syl-b">or</span><span class="syl-a">ang</span><span class="syl-b">es</span>', img: "🍊 🍊" }
+        ];
+        let selectedSentence = null;
+        let selectedEmoji = null;
+        let matchesFound = 0;
+
+        function initMatchGame() {
+            selectedSentence = null;
+            selectedEmoji = null;
+            matchesFound = 0;
+            
+            const sCol = document.getElementById('sentencesCol');
+            const eCol = document.getElementById('emojisCol');
+            sCol.innerHTML = "";
+            eCol.innerHTML = "";
+
+            let sentences = shuffleArray([...pairs]);
+            let emojis = shuffleArray([...pairs]);
+
+            sentences.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'match-item';
+                div.innerHTML = p.html; 
+                div.onclick = () => handleMatchClick('text', p.text, div); 
+                sCol.appendChild(div);
+            });
+
+            emojis.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'match-item';
+                div.style.fontSize = "4.5rem"; 
+                div.innerText = p.img;
+                div.onclick = () => handleMatchClick('img', p.img, div);
+                eCol.appendChild(div);
+            });
+            
+            speak("Match the sentence to the picture!");
+        }
+
+        function handleMatchClick(type, value, element) {
+            if (element.classList.contains('matched')) return;
+
+            if (type === 'text') {
+                if(selectedSentence) selectedSentence.el.classList.remove('selected');
+                selectedSentence = { val: value, el: element };
+                element.classList.add('selected');
+                speak(value);
+            } else {
+                if(selectedEmoji) selectedEmoji.el.classList.remove('selected');
+                selectedEmoji = { val: value, el: element };
+                element.classList.add('selected');
+            }
+
+            if (selectedSentence && selectedEmoji) {
+                const matchFound = pairs.find(p => p.text === selectedSentence.val && p.img === selectedEmoji.val);
+                
+                if (matchFound) {
+                    selectedSentence.el.classList.replace('selected', 'matched');
+                    selectedEmoji.el.classList.replace('selected', 'matched');
+                    triggerConfetti();
+                    speak("Great match!");
+                    matchesFound++;
+                    
+                    if (matchesFound === pairs.length) {
+                        setTimeout(() => {
+                            speak("You matched all of them! You win!");
+                            initMatchGame();
+                        }, 3500);
+                    }
+                } else {
+                    selectedSentence.el.style.borderColor = "var(--primary)";
+                    selectedSentence.el.style.backgroundColor = "#FFE8E8";
+                    selectedEmoji.el.style.borderColor = "var(--primary)";
+                    selectedEmoji.el.style.backgroundColor = "#FFE8E8";
+                    
+                    speak("Try again!");
+                    
+                    setTimeout(() => {
+                        if(selectedSentence) {
+                            selectedSentence.el.style.borderColor = "";
+                            selectedSentence.el.style.backgroundColor = "";
+                            selectedSentence.el.classList.remove('selected');
+                        }
+                        if(selectedEmoji) {
+                            selectedEmoji.el.style.borderColor = "";
+                            selectedEmoji.el.style.backgroundColor = "";
+                            selectedEmoji.el.classList.remove('selected');
+                        }
+                        selectedSentence = null;
+                        selectedEmoji = null;
+                    }, 1200);
+                    return;
+                }
+                
+                selectedSentence = null;
+                selectedEmoji = null;
+            }
+        }
+    </script>
+</body>
+</html>
