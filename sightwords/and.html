@@ -26,9 +26,58 @@
             overflow-x: hidden;
         }
 
+        /* Sound Toggle Button */
+        .sound-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--tertiary);
+            color: white;
+            border: 4px solid #6BAA1C;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #6BAA1C;
+            transition: all 0.2s;
+            z-index: 1000;
+            font-family: inherit;
+        }
+
+        .sound-toggle:active {
+            transform: translateY(5px);
+            box-shadow: none;
+        }
+
+        .sound-toggle.off {
+            background-color: var(--primary);
+            border-color: #C13D41;
+            box-shadow: 0 5px 0 #C13D41;
+        }
+
+        /* Clickable text for reading aloud */
+        .readable-text {
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            border-radius: 15px;
+            display: inline-block;
+            padding: 5px 15px;
+        }
+
+        .readable-text:hover {
+            background-color: rgba(255, 202, 58, 0.3); /* Fun yellow highlight on hover */
+            transform: scale(1.03);
+        }
+
+        .readable-text:active {
+            transform: scale(0.97);
+        }
+
         h1 {
             color: var(--primary);
             font-size: 3.5rem;
+            margin-top: 60px; /* Spaced to avoid sound button */
             margin-bottom: 10px;
             text-shadow: 2px 2px 0px #DDD;
         }
@@ -216,7 +265,7 @@
         }
         .train {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 2 levels of 3 cars */
+            grid-template-columns: repeat(3, 1fr); 
             gap: 15px;
             width: fit-content;
             margin: 0 auto;
@@ -327,7 +376,11 @@
 </head>
 <body>
 
-    <h1>✨ Learning "and" ✨</h1>
+    <!-- Toggle Sound Button -->
+    <button id="soundToggleBtn" class="sound-toggle" onclick="toggleSound()">🔊 Sound: ON</button>
+
+    <!-- Headings can now be clicked by the kid to read them aloud -->
+    <h1 class="readable-text" onclick="speak('Learning and')">✨ Learning "and" ✨</h1>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('learningTab', this)">📖 Read</button>
@@ -341,13 +394,14 @@
         <!-- Slide 1 -->
         <div class="slide active">
             <div class="slide-emoji">🔊</div>
-            <div class="slide-text"><span class="syl-a">and</span></div>
+            <div class="slide-text readable-text" onclick="speak(this.innerText)"><span class="syl-a">and</span></div>
+            <br>
             <button class="big-btn" onclick="speak('and')">Play Sound</button>
         </div>
         <!-- Slide 2 -->
         <div class="slide">
             <div class="slide-emoji">👨 👩</div>
-            <div class="slide-text">
+            <div class="slide-text readable-text" onclick="speak(this.innerText)">
                 <span class="syl-a">I</span> 
                 <span class="syl-b">love</span> 
                 <span class="syl-a">pa</span><span class="syl-b">pa</span> 
@@ -358,7 +412,7 @@
         <!-- Slide 3 -->
         <div class="slide">
             <div class="slide-emoji">🍎 🍌</div>
-            <div class="slide-text">
+            <div class="slide-text readable-text" onclick="speak(this.innerText)">
                 <span class="syl-a">I</span> 
                 <span class="syl-b">eat</span> 
                 <span class="syl-a">ap</span><span class="syl-b">ple</span> 
@@ -369,7 +423,7 @@
         <!-- Slide 4 -->
         <div class="slide">
             <div class="slide-emoji">📐 🔬</div>
-            <div class="slide-text">
+            <div class="slide-text readable-text" onclick="speak(this.innerText)">
                 <span class="syl-a">I</span> 
                 <span class="syl-b">stud</span><span class="syl-a">y</span> 
                 <span class="syl-b">math</span> 
@@ -380,7 +434,7 @@
         <!-- Slide 5 -->
         <div class="slide">
             <div class="slide-emoji">⚽ 🚲</div>
-            <div class="slide-text">
+            <div class="slide-text readable-text" onclick="speak(this.innerText)">
                 <span class="syl-a">I</span> 
                 <span class="syl-b">play</span> 
                 <span class="syl-a">with</span> 
@@ -392,7 +446,7 @@
         <!-- Slide 6 -->
         <div class="slide">
             <div class="slide-emoji">🐕 🐈</div>
-            <div class="slide-text">
+            <div class="slide-text readable-text" onclick="speak(this.innerText)">
                 <span class="syl-a">I</span> 
                 <span class="syl-b">see</span> 
                 <span class="syl-a">a</span> 
@@ -412,15 +466,15 @@
 
     <!-- TAB 2: SEARCH GAME -->
     <div id="searchTab" class="tab-content">
-        <h2 style="color: var(--quaternary); font-size: 2.8rem; margin-top: 0;">Find "and" 5 times!</h2>
+        <h2 class="readable-text" onclick="speak(this.innerText)" style="color: var(--quaternary); font-size: 2.8rem; margin-top: 0;">Find "and" 5 times!</h2>
         <div id="timer">Level <span id="levelNum">1</span> ⏱️ Time: <span id="timeText">60</span>s</div>
         <div class="word-grid" id="searchGrid"></div>
-        <div id="searchFeedback" style="font-size: 2.5rem; margin-top: 15px; font-weight: bold; color: var(--primary);"></div>
+        <div id="searchFeedback" class="readable-text" onclick="speak(this.innerText)" style="font-size: 2.5rem; margin-top: 15px; font-weight: bold; color: var(--primary);"></div>
     </div>
 
     <!-- TAB 3: WRITE THE WORD TRAIN -->
     <div id="writeTab" class="tab-content">
-        <h2 style="color: var(--quaternary); font-size: 2.8rem; margin-top: 0;">Catch the letters for "and"!</h2>
+        <h2 class="readable-text" onclick="speak(this.innerText)" style="color: var(--quaternary); font-size: 2.8rem; margin-top: 0;">Catch the letters for "and"!</h2>
         <p style="font-size: 2rem; color: var(--primary); font-weight: bold; margin: 10px 0;">Round: <span id="writeRound">1</span> / 5</p>
         <div class="train-container">
             <div class="train" id="trainCars">
@@ -432,12 +486,12 @@
             <div class="answer-slot" id="slot1"></div>
             <div class="answer-slot" id="slot2"></div>
         </div>
-        <div id="writeFeedback" style="font-size: 2.2rem; margin-top: 25px; font-weight:bold;"></div>
+        <div id="writeFeedback" class="readable-text" onclick="speak(this.innerText)" style="font-size: 2.2rem; margin-top: 25px; font-weight:bold;"></div>
     </div>
 
     <!-- TAB 4: MATCHING GAME -->
     <div id="matchTab" class="tab-content">
-        <h2 style="color: var(--quaternary); font-size: 2.8rem; margin-top: 0;">Match the sentence to the picture!</h2>
+        <h2 class="readable-text" onclick="speak(this.innerText)" style="color: var(--quaternary); font-size: 2.8rem; margin-top: 0;">Match the sentence to the picture!</h2>
         <div class="match-container">
             <div class="match-column" id="sentencesCol"></div>
             <div class="match-column" id="emojisCol"></div>
@@ -448,7 +502,22 @@
     <div id="confetti"></div>
 
     <script>
-        // --- GLOBAL FUNCTIONS ---
+        // --- GLOBAL FUNCTIONS & SOUND TOGGLE ---
+        let soundEnabled = true;
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundToggleBtn');
+            if (soundEnabled) {
+                btn.innerHTML = "🔊 Sound: ON";
+                btn.classList.remove('off');
+                speak("Sound on"); 
+            } else {
+                window.speechSynthesis.cancel(); // Stop anything playing immediately
+                btn.innerHTML = "🔇 Sound: OFF";
+                btn.classList.add('off');
+            }
+        }
 
         // Helper function for perfectly robust random shuffling
         function shuffleArray(array) {
@@ -461,46 +530,44 @@
             return array;
         }
         
-        // 1. Prepare a variable to hold our chosen voice
+        // Prepare a variable to hold our chosen voice
         let kidFriendlyVoice = null;
 
-        // 2. Function to find a clear, feminine voice
+        // Function to find a clear, feminine voice
         function loadVoices() {
             const voices = window.speechSynthesis.getVoices();
-            // Look for high-quality, clear female English voices first
             kidFriendlyVoice = voices.find(voice => 
-                voice.name.includes('Google US English') || // Chrome's excellent female voice
-                voice.name.includes('Samantha') ||          // Safari/Mac clear female voice
-                voice.name.includes('Zira') ||              // Windows clear female voice
+                voice.name.includes('Google US English') || 
+                voice.name.includes('Samantha') ||          
+                voice.name.includes('Zira') ||              
                 (voice.lang.includes('en') && voice.name.includes('Female'))
             );
             
-            // Fallback to the first available English voice if the above aren't found
             if (!kidFriendlyVoice) {
                 kidFriendlyVoice = voices.find(voice => voice.lang.startsWith('en'));
             }
         }
 
-        // Browsers load voices asynchronously, so we wait for them to be ready
         if ('speechSynthesis' in window) {
             loadVoices();
             window.speechSynthesis.onvoiceschanged = loadVoices;
         }
 
         function speak(text) {
+            if (!soundEnabled) return; // Exit if the sound toggle is turned off
+            
             if ('speechSynthesis' in window) {
-                // Cancel any ongoing speech
                 window.speechSynthesis.cancel();
                 const msg = new SpeechSynthesisUtterance(text);
                 
-                // Apply the clear, feminine voice if we found one
                 if (kidFriendlyVoice) {
                     msg.voice = kidFriendlyVoice;
                 }
                 
                 // Adjust settings for a 4-year-old
                 msg.rate = 0.70;  // Slower pace
-                msg.pitch = 1.15; // Slightly higher pitch for a friendly, feminine tone
+                msg.pitch = 1.15; // Slightly higher pitch
+                msg.volume = 1.0; // Enforce MAXIMUM volume
                 
                 window.speechSynthesis.speak(msg);
             }
@@ -517,7 +584,6 @@
                 piece.style.top = '-20px';
                 piece.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
                 
-                // Randomly assign shapes
                 if (Math.random() > 0.5) {
                     piece.style.borderRadius = "50%";
                 }
@@ -544,7 +610,6 @@
         const slides = document.querySelectorAll('.slide');
         const dotsContainer = document.getElementById('slideDots');
 
-        // Create dots
         slides.forEach((s, i) => {
             const dot = document.createElement('div');
             dot.className = i === 0 ? 'dot active' : 'dot';
@@ -574,7 +639,6 @@
             }
         }
 
-        // Auto-read on load
         window.onload = () => {
             setTimeout(() => { if(document.getElementById('learningTab').classList.contains('active')) readCurrentSlide(); }, 500);
         };
@@ -599,16 +663,14 @@
             const grid = document.getElementById('searchGrid');
             grid.innerHTML = "";
 
-            // Level 1: 9 words (3x3), Level 2: 16 words (4x4), Level 3: 25 words (5x5)
             let totalWords = level === 1 ? 9 : (level === 2 ? 16 : 25);
             grid.style.gridTemplateColumns = `repeat(${Math.sqrt(totalWords)}, 1fr)`;
 
-            // Ensure 5 instances of "and"
             let words = ["and", "and", "and", "and", "and"];
             while(words.length < totalWords) {
                 words.push(decoys[Math.floor(Math.random() * decoys.length)]);
             }
-            words = shuffleArray(words); // True shuffle
+            words = shuffleArray(words);
 
             words.forEach(word => {
                 const btn = document.createElement('button');
@@ -665,7 +727,6 @@
                     document.getElementById('searchFeedback').innerText = "";
                 }, 1500);
 
-                // Highlight correct answers to help show the correct answer
                 document.querySelectorAll('.search-word').forEach(wBtn => {
                     if (wBtn.innerText === "and" && !wBtn.classList.contains('found')) {
                         wBtn.classList.add('hint');
@@ -686,7 +747,6 @@
             document.getElementById('writeFeedback').innerText = "";
             document.getElementById('writeFeedback').style.color = "var(--quaternary)";
             
-            // Reset answer slots
             for(let i = 0; i < 3; i++) {
                 document.getElementById('slot'+i).innerText = "";
                 document.getElementById('slot'+i).style.backgroundColor = "#FAFAFA";
@@ -696,14 +756,10 @@
             const train = document.getElementById('trainCars');
             train.innerHTML = "";
             
-            // Randomly pick 3 decoy letters that are NOT 'a', 'n', or 'd'
             let availableDecoys = "bcefghijklmopqrstuvwxyz".split("");
             availableDecoys = shuffleArray(availableDecoys);
             
-            // Combine target letters and randomly picked decoys
             let letters = ['a', 'n', 'd', availableDecoys[0], availableDecoys[1], availableDecoys[2]];
-            
-            // Truly shuffle their layout every round/trial
             letters = shuffleArray(letters);
 
             letters.forEach(letter => {
@@ -720,7 +776,6 @@
         function handleTrainClick(letter, carElement) {
             if (currentWriteIndex >= 3) return;
 
-            // Check if correct letter in order
             if (letter === targetWord[currentWriteIndex]) {
                 const slot = document.getElementById('slot' + currentWriteIndex);
                 slot.innerText = letter;
@@ -741,7 +796,7 @@
                     } else {
                         document.getElementById('writeFeedback').innerText = "You wrote it 5 times! You win! 🏆";
                         speak("You wrote it five times! You win!");
-                        writeRounds = 1; // Reset for next time tab opens
+                        writeRounds = 1;
                     }
                 }
             } else {
@@ -752,7 +807,6 @@
                 
                 carElement.style.backgroundColor = "#555";
                 
-                // Show the correct answer by highlighting the correct train car
                 document.querySelectorAll('.train-car').forEach(c => {
                     if (c.innerText === neededLetter) {
                         c.classList.add('correct-hint');
@@ -789,7 +843,6 @@
             sCol.innerHTML = "";
             eCol.innerHTML = "";
 
-            // Truly shuffle the lists for random layout every single time
             let sentences = shuffleArray([...pairs]);
             let emojis = shuffleArray([...pairs]);
 
