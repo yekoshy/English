@@ -22,14 +22,56 @@
             color: var(--text-color);
             margin: 0;
             padding: 10px;
+            padding-top: 60px; /* Space for the sound button */
             text-align: center;
             overflow-x: hidden;
+        }
+
+        /* --- Global Sound Toggle Button --- */
+        #audioToggleBtn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--tertiary);
+            color: white;
+            border: 4px solid #6BAA1C;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 2000;
+            transition: 0.2s;
+            box-shadow: 0 4px 0 #6BAA1C;
+            font-family: inherit;
+        }
+
+        #audioToggleBtn.off {
+            background-color: #A0A0A0;
+            border-color: #777;
+            box-shadow: 0 4px 0 #777;
+        }
+
+        #audioToggleBtn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* --- Clickable Text Indicator --- */
+        .readable {
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        .readable:hover {
+            transform: scale(1.05);
         }
 
         h1 {
             color: var(--primary);
             font-size: 3rem;
             margin-bottom: 10px;
+            margin-top: 0;
         }
 
         /* Tabs Navigation */
@@ -198,7 +240,7 @@
         }
         .train {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 2 levels of 3 cars */
+            grid-template-columns: repeat(3, 1fr); 
             gap: 15px;
             width: fit-content;
             margin: 0 auto;
@@ -290,96 +332,78 @@
 </head>
 <body>
 
-    <h1>✨ Learning "the" ✨</h1>
+    <!-- Global Toggle Audio Button -->
+    <button id="audioToggleBtn" onclick="toggleAudio()">🔊 Sound ON</button>
+
+    <h1 class="readable" onclick="speak('Learning the word: the')">✨ Learning "the" ✨</h1>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('learningTab', this)">📖 Read</button>
-        <button class="tab-btn" onclick="openTab('searchTab', this)">🔍 Find</button>
-        <button class="tab-btn" onclick="openTab('writeTab', this)">🚂 Write</button>
-        <button class="tab-btn" onclick="openTab('matchTab', this)">🧩 Match</button>
+        <button class="tab-btn active" onclick="openTab('learningTab', this); speak('Read');">📖 Read</button>
+        <button class="tab-btn" onclick="openTab('searchTab', this); speak('Find');">🔍 Find</button>
+        <button class="tab-btn" onclick="openTab('writeTab', this); speak('Write');">🚂 Write</button>
+        <button class="tab-btn" onclick="openTab('matchTab', this); speak('Match');">🧩 Match</button>
     </div>
 
     <!-- TAB 1: LEARNING -->
     <div id="learningTab" class="tab-content active">
-        <!-- Slide 1 -->
         <div class="slide active">
-            <div class="slide-emoji">🔊</div>
-            <div class="slide-text"><span class="syl-a">the</span></div>
+            <div class="slide-emoji readable" onclick="speak('the')">🔊</div>
+            <div class="slide-text readable" onclick="speak('the')"><span class="syl-a">the</span></div>
             <button class="big-btn" onclick="speak('the')">Play Sound</button>
         </div>
-        <!-- Slide 2 -->
         <div class="slide">
-            <div class="slide-emoji">🐈</div>
-            <div class="slide-text">
-                <span class="syl-a">The</span> 
-                <span class="syl-b">cat</span> 
-                <span class="syl-a">is</span> 
-                <span class="syl-b">small</span>
+            <div class="slide-emoji readable" onclick="readCurrentSlide()">🐈</div>
+            <div class="slide-text readable" onclick="readCurrentSlide()">
+                <span class="syl-a">The</span> <span class="syl-b">cat</span> <span class="syl-a">is</span> <span class="syl-b">small</span>
             </div>
         </div>
-        <!-- Slide 3 -->
         <div class="slide">
-            <div class="slide-emoji">🐘</div>
-            <div class="slide-text">
-                <span class="syl-a">The</span> 
-                <span class="syl-b">el</span><span class="syl-a">e</span><span class="syl-b">phant</span> 
-                <span class="syl-a">is</span> 
-                <span class="syl-b">big</span>
+            <div class="slide-emoji readable" onclick="readCurrentSlide()">🐘</div>
+            <div class="slide-text readable" onclick="readCurrentSlide()">
+                <span class="syl-a">The</span> <span class="syl-b">el</span><span class="syl-a">e</span><span class="syl-b">phant</span> <span class="syl-a">is</span> <span class="syl-b">big</span>
             </div>
         </div>
-        <!-- Slide 4 -->
         <div class="slide">
-            <div class="slide-emoji">🍎</div>
-            <div class="slide-text">
-                <span class="syl-a">The</span> 
-                <span class="syl-b">ap</span><span class="syl-a">ple</span> 
-                <span class="syl-b">is</span> 
-                <span class="syl-a">sweet</span>
+            <div class="slide-emoji readable" onclick="readCurrentSlide()">🍎</div>
+            <div class="slide-text readable" onclick="readCurrentSlide()">
+                <span class="syl-a">The</span> <span class="syl-b">ap</span><span class="syl-a">ple</span> <span class="syl-b">is</span> <span class="syl-a">sweet</span>
             </div>
         </div>
-        <!-- Slide 5 -->
         <div class="slide">
-            <div class="slide-emoji">🍋</div>
-            <div class="slide-text">
-                <span class="syl-a">The</span> 
-                <span class="syl-b">lem</span><span class="syl-a">on</span> 
-                <span class="syl-b">is</span> 
-                <span class="syl-a">sour</span>
+            <div class="slide-emoji readable" onclick="readCurrentSlide()">🍋</div>
+            <div class="slide-text readable" onclick="readCurrentSlide()">
+                <span class="syl-a">The</span> <span class="syl-b">lem</span><span class="syl-a">on</span> <span class="syl-b">is</span> <span class="syl-a">sour</span>
             </div>
         </div>
-        <!-- Slide 6 -->
         <div class="slide">
-            <div class="slide-emoji">🌤️</div>
-            <div class="slide-text">
-                <span class="syl-a">The</span> 
-                <span class="syl-b">sky</span> 
-                <span class="syl-a">is</span> 
-                <span class="syl-b">clear</span>
+            <div class="slide-emoji readable" onclick="readCurrentSlide()">🌤️</div>
+            <div class="slide-text readable" onclick="readCurrentSlide()">
+                <span class="syl-a">The</span> <span class="syl-b">sky</span> <span class="syl-a">is</span> <span class="syl-b">clear</span>
             </div>
         </div>
 
         <div class="slide-controls">
-            <button class="big-btn" onclick="changeSlide(-1)">⬅️ Back</button>
+            <button class="big-btn" onclick="changeSlide(-1); speak('Back')">⬅️ Back</button>
             <div class="dots" id="slideDots"></div>
-            <button class="big-btn" onclick="changeSlide(1)">Next ➡️</button>
+            <button class="big-btn" onclick="changeSlide(1); speak('Next')">Next ➡️</button>
         </div>
     </div>
 
     <!-- TAB 2: SEARCH GAME -->
     <div id="searchTab" class="tab-content">
-        <h2 style="color: var(--quaternary); font-size: 2.5rem;">Find "the" 5 times!</h2>
-        <div id="timer">Level <span id="levelNum">1</span> - Time: <span id="timeText">60</span>s</div>
+        <h2 class="readable" style="color: var(--quaternary); font-size: 2.5rem;" onclick="speak(this.innerText)">Find "the" 5 times!</h2>
+        <div id="timer" class="readable" onclick="speak('Level ' + searchLevel + '. Time left: ' + timeLeft + ' seconds')">Level <span id="levelNum">1</span> - Time: <span id="timeText">60</span>s</div>
         <div class="word-grid" id="searchGrid"></div>
-        <div id="searchFeedback" style="font-size: 2rem; margin-top: 10px; color: var(--primary);"></div>
+        <div id="searchFeedback" class="readable" style="font-size: 2rem; margin-top: 10px; color: var(--primary);" onclick="if(this.innerText) speak(this.innerText)"></div>
     </div>
 
     <!-- TAB 3: WRITE THE WORD TRAIN -->
     <div id="writeTab" class="tab-content">
-        <h2 style="color: var(--quaternary); font-size: 2.5rem;">Catch the letters for "the"!</h2>
-        <p style="font-size: 1.5rem;">Round: <span id="writeRound">1</span>/5</p>
+        <h2 class="readable" style="color: var(--quaternary); font-size: 2.5rem;" onclick="speak(this.innerText)">Catch the letters for "the"!</h2>
+        <p class="readable" style="font-size: 1.5rem;" onclick="speak('Round ' + writeRounds + ' of 5')">Round: <span id="writeRound">1</span>/5</p>
         <div class="train-container">
             <div class="train" id="trainCars">
-                <!-- Cars generated by JS as a static 2-level grid -->
+                <!-- Cars generated by JS -->
             </div>
         </div>
         <div class="answer-board" id="answerBoard">
@@ -387,25 +411,41 @@
             <div class="answer-slot" id="slot1"></div>
             <div class="answer-slot" id="slot2"></div>
         </div>
-        <div id="writeFeedback" style="font-size: 2rem; margin-top: 20px; font-weight:bold;"></div>
+        <div id="writeFeedback" class="readable" style="font-size: 2rem; margin-top: 20px; font-weight:bold;" onclick="if(this.innerText) speak(this.innerText)"></div>
     </div>
 
     <!-- TAB 4: MATCHING GAME -->
     <div id="matchTab" class="tab-content">
-        <h2 style="color: var(--quaternary); font-size: 2.5rem;">Match the sentence to the picture!</h2>
+        <h2 class="readable" style="color: var(--quaternary); font-size: 2.5rem;" onclick="speak(this.innerText)">Match the sentence to the picture!</h2>
         <div class="match-container">
             <div class="match-column" id="sentencesCol"></div>
             <div class="match-column" id="emojisCol"></div>
         </div>
     </div>
 
-    <!-- Confetti Container -->
     <div id="confetti"></div>
 
     <script>
-        // --- GLOBAL FUNCTIONS ---
+        // --- GLOBAL AUDIO TOGGLE ---
+        let isAudioEnabled = true; // Default is ON
 
-        // Helper function for perfectly robust random shuffling
+        function toggleAudio() {
+            isAudioEnabled = !isAudioEnabled;
+            const btn = document.getElementById('audioToggleBtn');
+            
+            if (isAudioEnabled) {
+                btn.innerHTML = "🔊 Sound ON";
+                btn.classList.remove('off');
+                speak("Sound on"); 
+            } else {
+                btn.innerHTML = "🔇 Sound OFF";
+                btn.classList.add('off');
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel(); // Stop any currently playing audio immediately
+                }
+            }
+        }
+
         function shuffleArray(array) {
             let currentIndex = array.length, randomIndex;
             while (currentIndex !== 0) {
@@ -416,46 +456,41 @@
             return array;
         }
         
-        // 1. Prepare a variable to hold our chosen voice
         let kidFriendlyVoice = null;
 
-        // 2. Function to find a clear, feminine voice
         function loadVoices() {
             const voices = window.speechSynthesis.getVoices();
-            // Look for high-quality, clear female English voices first
             kidFriendlyVoice = voices.find(voice => 
-                voice.name.includes('Google US English') || // Chrome's excellent female voice
-                voice.name.includes('Samantha') ||          // Safari/Mac clear female voice
-                voice.name.includes('Zira') ||              // Windows clear female voice
+                voice.name.includes('Google US English') ||
+                voice.name.includes('Samantha') ||          
+                voice.name.includes('Zira') ||              
                 (voice.lang.includes('en') && voice.name.includes('Female'))
             );
-            
-            // Fallback to the first available English voice if the above aren't found
             if (!kidFriendlyVoice) {
                 kidFriendlyVoice = voices.find(voice => voice.lang.startsWith('en'));
             }
         }
 
-        // Browsers load voices asynchronously, so we wait for them to be ready
         if ('speechSynthesis' in window) {
             loadVoices();
             window.speechSynthesis.onvoiceschanged = loadVoices;
         }
 
         function speak(text) {
+            // Exit immediately if sound is turned off
+            if (!isAudioEnabled) return; 
+
             if ('speechSynthesis' in window) {
-                // Cancel any ongoing speech
-                window.speechSynthesis.cancel();
+                window.speechSynthesis.cancel(); // Stop overlap
                 const msg = new SpeechSynthesisUtterance(text);
                 
-                // Apply the clear, feminine voice if we found one
                 if (kidFriendlyVoice) {
                     msg.voice = kidFriendlyVoice;
                 }
                 
-                // Adjust settings for a 4-year-old
-                msg.rate = 0.70;  // Slower pace
-                msg.pitch = 1.15; // Slightly higher pitch for a friendly, feminine tone
+                msg.rate = 0.70;  
+                msg.pitch = 1.15; 
+                msg.volume = 1.0; // Enforce high volume
                 
                 window.speechSynthesis.speak(msg);
             }
@@ -493,7 +528,6 @@
         const slides = document.querySelectorAll('.slide');
         const dotsContainer = document.getElementById('slideDots');
 
-        // Create dots
         slides.forEach((s, i) => {
             const dot = document.createElement('div');
             dot.className = i === 0 ? 'dot active' : 'dot';
@@ -542,7 +576,6 @@
             const grid = document.getElementById('searchGrid');
             grid.innerHTML = "";
 
-            // Level 1: 9 words (3x3), Level 2: 16 words (4x4), Level 3: 25 words (5x5)
             let totalWords = level === 1 ? 9 : (level === 2 ? 16 : 25);
             grid.style.gridTemplateColumns = `repeat(${Math.sqrt(totalWords)}, 1fr)`;
 
@@ -550,7 +583,7 @@
             while(words.length < totalWords) {
                 words.push(decoys[Math.floor(Math.random() * decoys.length)]);
             }
-            words = shuffleArray(words); // True shuffle
+            words = shuffleArray(words); 
 
             words.forEach(word => {
                 const btn = document.createElement('button');
@@ -566,6 +599,7 @@
                 if(timeLeft <= 0) {
                     clearInterval(searchTimer);
                     document.getElementById('searchFeedback').innerText = "Time's up! Let's try again! ⏳";
+                    speak("Time's up! Let's try again!");
                     setTimeout(() => initSearchGame(searchLevel), 3000);
                 }
             }, 1000);
@@ -580,22 +614,23 @@
                 if (foundCount === 5) {
                     clearInterval(searchTimer);
                     document.getElementById('searchFeedback').innerText = "Great Job! 🎉";
+                    speak("Great Job!");
                     if (searchLevel < 3) {
                         setTimeout(() => initSearchGame(searchLevel + 1), 2000);
                     } else {
                         document.getElementById('searchFeedback').innerText = "You beat all levels! 🏆";
+                        speak("You beat all levels!");
                     }
                 }
             } else {
                 btn.classList.add('wrong');
-                speak("Oops!");
+                speak("Oops! " + word);
                 document.getElementById('searchFeedback').innerText = "Look for 'the'!";
                 setTimeout(() => {
                     btn.classList.remove('wrong');
                     document.getElementById('searchFeedback').innerText = "";
                 }, 1000);
 
-                // Highlight correct answers to help
                 document.querySelectorAll('.search-word').forEach(wBtn => {
                     if (wBtn.innerText === "the" && !wBtn.classList.contains('found')) {
                         wBtn.classList.add('hint');
@@ -616,7 +651,6 @@
             document.getElementById('writeFeedback').innerText = "";
             document.getElementById('writeFeedback').style.color = "var(--quaternary)";
             
-            // Reset answer slots
             for(let i=0; i<3; i++) {
                 document.getElementById('slot'+i).innerText = "";
                 document.getElementById('slot'+i).style.backgroundColor = "transparent";
@@ -625,14 +659,9 @@
             const train = document.getElementById('trainCars');
             train.innerHTML = "";
             
-            // Randomly pick 3 decoy letters that are NOT 't', 'h', or 'e'
             let availableDecoys = "abcdfghijklmnopqrsuvwxyz".split("");
             availableDecoys = shuffleArray(availableDecoys);
-            
-            // Combine target letters and randomly picked decoys
             let letters = ['t', 'h', 'e', availableDecoys[0], availableDecoys[1], availableDecoys[2]];
-            
-            // Truly shuffle their layout every round/trial
             letters = shuffleArray(letters);
 
             letters.forEach(letter => {
@@ -647,7 +676,6 @@
         function handleTrainClick(letter, carElement) {
             if (currentWriteIndex >= 3) return;
 
-            // Check if correct letter in order
             if (letter === targetWord[currentWriteIndex]) {
                 document.getElementById('slot' + currentWriteIndex).innerText = letter;
                 document.getElementById('slot' + currentWriteIndex).style.backgroundColor = "#E8F4FA";
@@ -655,7 +683,7 @@
                 currentWriteIndex++;
 
                 if (currentWriteIndex === 3) {
-                    speak("the");
+                    setTimeout(() => speak("the"), 800); // slight delay so letter finishes
                     triggerConfetti();
                     document.getElementById('writeFeedback').style.color = "var(--tertiary)";
                     document.getElementById('writeFeedback').innerText = "Perfect! 🎉";
@@ -664,11 +692,12 @@
                         setTimeout(initWriteGame, 2000);
                     } else {
                         document.getElementById('writeFeedback').innerText = "You wrote it 5 times! You win! 🏆";
-                        writeRounds = 1; // Reset for next time tab opens
+                        speak("You wrote it 5 times! You win!");
+                        writeRounds = 1; 
                     }
                 }
             } else {
-                speak("Try again!");
+                speak(letter + "... Try again!");
                 document.getElementById('writeFeedback').style.color = "var(--primary)";
                 document.getElementById('writeFeedback').innerText = `Oops! We need "${targetWord[currentWriteIndex]}" next!`;
                 carElement.style.backgroundColor = "var(--text-color)";
@@ -680,7 +709,6 @@
         }
 
         // --- TAB 4: MATCH GAME LOGIC ---
-        // Storing HTML strings for multi-colored syllable formatting
         const pairs = [
             { text: "The cat is small", html: '<span class="syl-a">The</span> <span class="syl-b">cat</span> <span class="syl-a">is</span> <span class="syl-b">small</span>', img: "🐈" },
             { text: "The elephant is big", html: '<span class="syl-a">The</span> <span class="syl-b">el</span><span class="syl-a">e</span><span class="syl-b">phant</span> <span class="syl-a">is</span> <span class="syl-b">big</span>', img: "🐘" },
@@ -701,7 +729,6 @@
             sCol.innerHTML = "";
             eCol.innerHTML = "";
 
-            // Truly shuffle the lists for random layout every single time
             let sentences = shuffleArray([...pairs]);
             let emojis = shuffleArray([...pairs]);
 
@@ -726,7 +753,6 @@
         function handleMatchClick(type, value, element) {
             if (element.classList.contains('matched')) return;
 
-            // Handle selection visually
             if (type === 'text') {
                 if(selectedSentence) selectedSentence.el.classList.remove('selected');
                 selectedSentence = { val: value, el: element };
@@ -736,9 +762,9 @@
                 if(selectedEmoji) selectedEmoji.el.classList.remove('selected');
                 selectedEmoji = { val: value, el: element };
                 element.classList.add('selected');
+                // Optional visual cue when emoji is clicked
             }
 
-            // Check match if both selected
             if (selectedSentence && selectedEmoji) {
                 const matchFound = pairs.find(p => p.text === selectedSentence.val && p.img === selectedEmoji.val);
                 
