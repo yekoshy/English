@@ -422,7 +422,7 @@
         </div>
         <!-- Slide 4 -->
         <div class="slide">
-            <div class="slide-emoji">🧸</div>
+            <div class="slide-emoji">🪆</div>
             <div class="slide-text readable-text" onclick="speak(this.innerText)">
                 <span class="syl-a">It</span> 
                 <span class="syl-b">is</span> 
@@ -442,12 +442,12 @@
         </div>
         <!-- Slide 6 -->
         <div class="slide">
-            <div class="slide-emoji">🍊 🍊</div>
+            <div class="slide-emoji">🍊</div>
             <div class="slide-text readable-text" onclick="speak(this.innerText)">
                 <span class="syl-a">This</span> 
                 <span class="syl-b">is</span> 
                 <span class="syl-a">an</span> 
-                <span class="syl-b">or</span><span class="syl-a">ang</span><span class="syl-b">es</span>
+                <span class="syl-b">or</span><span class="syl-a">ange</span>
             </div>
         </div>
 
@@ -641,7 +641,7 @@
         let searchTimer;
         let timeLeft = 60;
         let foundCount = 0;
-        const decoys = ["see", "bridge", "love", "baby", "doll", "apple", "oranges", "There", "This", "is"];
+        const decoys = ["see", "bridge", "love", "baby", "doll", "apple", "orange", "There", "This", "is"];
 
         function initSearchGame(level) {
             clearInterval(searchTimer);
@@ -826,9 +826,9 @@
         const pairs = [
             { text: "I see a bridge", html: '<span class="syl-a">I</span> <span class="syl-b">see</span> <span class="syl-a">a</span> <span class="syl-b">bridge</span>', img: "🌉 👀" },
             { text: "I love a baby", html: '<span class="syl-a">I</span> <span class="syl-b">love</span> <span class="syl-a">a</span> <span class="syl-b">ba</span><span class="syl-a">by</span>', img: "❤️ 👶" },
-            { text: "It is a doll", html: '<span class="syl-a">It</span> <span class="syl-b">is</span> <span class="syl-a">a</span> <span class="syl-b">doll</span>', img: "🧸" },
+            { text: "It is a doll", html: '<span class="syl-a">It</span> <span class="syl-b">is</span> <span class="syl-a">a</span> <span class="syl-b">doll</span>', img: "🪆" },
             { text: "There is an apple", html: '<span class="syl-a">There</span> <span class="syl-b">is</span> <span class="syl-a">an</span> <span class="syl-b">ap</span><span class="syl-a">ple</span>', img: "🍎" },
-            { text: "This is an oranges", html: '<span class="syl-a">This</span> <span class="syl-b">is</span> <span class="syl-a">an</span> <span class="syl-b">or</span><span class="syl-a">ang</span><span class="syl-b">es</span>', img: "🍊 🍊" }
+            { text: "This is an orange", html: '<span class="syl-a">This</span> <span class="syl-b">is</span> <span class="syl-a">an</span> <span class="syl-b">or</span><span class="syl-a">ange</span>', img: "🍊" }
         ];
         let selectedSentence = null;
         let selectedEmoji = null;
